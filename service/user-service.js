@@ -39,6 +39,26 @@ class UserService {
         await user.save();
     }
 
+    async changePassword(email, password, newPassword) {
+        const user = await UserModel.findOne({email});
+        const isPassEqual = await bcrypt.compare(password, user.password)
+
+        const isSameAtLast = await bcrypt.compare(newPassword, user.password)
+
+        if(isSameAtLast) {
+            throw ApiError.BadRequest('The new password cannot be the same as the old password')
+        }
+
+        if(!isPassEqual){
+            throw ApiError.BadRequest('Incorrect Password')
+        }
+        user.password = await bcrypt.hash(newPassword,3);
+        await user.save();
+        return {
+            isPassChnaged: true
+        }
+    }
+
     async login(email,password) {
         const user = await UserModel.findOne({email});
         if(!user){
