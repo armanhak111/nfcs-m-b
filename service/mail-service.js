@@ -1,4 +1,6 @@
 const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
+const path = require('path');
 
 class MailService { 
 
@@ -12,19 +14,48 @@ class MailService {
         })
     }
 
-    async sendActivationMail(to, link) {
+    async sendActivationMail(to, link ,template) {
+        this.transporter.use('compile', hbs({
+            viewEngine: {
+                extname: '.handlebars',
+                layoutsDir: 'mail-templates/',
+                defaultLayout: template,
+            },
+            viewPath: 'mail-templates',
+            extName: '.handlebars',
+        }));
         await this.transporter.sendMail({
             from: process.env.SMPT_USER,
             to,
             subject: 'Activation' + process.env.API_URL,
             text: '',
-            html: 
-            `
-                <div>
-                    <h1>LINK ACTIVATIONS</h1>
-                    <a href="${link}">${link}</a>
-                </div>
-            `
+            template: template,
+            context: {                  
+                link,
+                name: 'Admin'
+              }
+        })
+    }
+
+    async sendChangePassword(to, template) {
+        this.transporter.use('compile', hbs({
+            viewEngine: {
+                extname: '.handlebars',
+                layoutsDir: 'mail-templates/',
+                defaultLayout: template,
+            },
+            viewPath: 'mail-templates',
+            extName: '.handlebars',
+        }));
+        await this.transporter.sendMail({
+            from: process.env.SMPT_USER,
+            to,
+            subject: 'Chnage Password' + process.env.API_URL,
+            text: '',
+            template: template,
+            context: {                  
+                name: 'Admin'
+              }
         })
     }
 };

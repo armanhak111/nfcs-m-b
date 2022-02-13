@@ -5,6 +5,8 @@ const mailService = require('./mail-service');
 const tokenService = require('../service/token-service');
 const UserDto = require('../dtos/user-dto');
 const ApiError = require('../exceptions/api-errors');
+const MAIL_TEMPLATES = require('../mail-templates/templates');
+
 
 class UserService { 
     async registration(email, password) {
@@ -16,7 +18,7 @@ class UserService {
         const hashPassword = await bcrypt.hash(password,3)
         const activationLink = uuid.v4();
         const user = await UserModel.create({email,password: hashPassword, activationLink})
-        await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
+        await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`, MAIL_TEMPLATES.activation);
 
         const userDto = new UserDto(user)
         const tokens = tokenService.generateTokens({...userDto})
@@ -54,6 +56,7 @@ class UserService {
         }
         user.password = await bcrypt.hash(newPassword,3);
         await user.save();
+        await mailService.sendChangePassword(email, MAIL_TEMPLATES.changePassword );
         return {
             isPassChnaged: true
         }
