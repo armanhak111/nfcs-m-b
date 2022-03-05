@@ -50,10 +50,15 @@ class UserController {
         try {
             const activationLink = req.params.link;
             await userService.activate(activationLink)
-            return res.redirect(process.env.CLIENT_URL)
+            return res.redirect(`${process.env.CLIENT_URL}/login`)
         } catch (e) {
             next(e)
         }
+    }
+
+    async health(req,res){
+        const isHealth = {code: 200, status: 'healthy'}
+        return res.json(isHealth)
     }
 
     async refresh(req,res,next){

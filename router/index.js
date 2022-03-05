@@ -15,4 +15,8 @@ router.get('/refresh', userController.refresh);
 router.get('/users', authMiddleware,  userController.getUsers);
 router.post('/changepassword', userController.changePassword)
 
+
+router.get('/health', userController.health);
+
+
 module.exports = router;
