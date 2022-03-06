@@ -25,7 +25,7 @@ const start = async () => {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
-        app.listen(PORT, () => console.log(`Server start PORT=${PORT}`) )
+        app.listen(PORT, () => console.log(`Server start PORT=${PORT} ${process.env.SMPT_PASSWORD}`) )
     }catch (error) {
         console.log(error)
     }
