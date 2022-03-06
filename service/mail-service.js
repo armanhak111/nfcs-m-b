@@ -4,19 +4,16 @@ const path = require('path');
 
 class MailService { 
 
-    constructor(){
-        this.transporter = nodemailer.createTransport({
+    async sendActivationMail(to, link ,template) {
+        const currPath = path.join(__dirname, '../mail-templates/')
+        const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
                 user: process.env.SMPT_USER,
                 pass: process.env.SMPT_PASSWORD,
             }
         })
-    }
-
-    async sendActivationMail(to, link ,template) {
-        const currPath = path.join(__dirname, '../mail-templates/')
-        this.transporter.use('compile', hbs({
+        transporter.use('compile', hbs({
             viewEngine: {
                 extname: '.handlebars',
                 layoutsDir: currPath,
@@ -25,7 +22,7 @@ class MailService {
             viewPath: currPath,
             extName: '.handlebars',
         }));
-        await this.transporter.sendMail({
+        await transporter.sendMail({
             from: process.env.SMPT_USER,
             to,
             subject: 'Activation' + process.env.API_URL,
@@ -39,8 +36,15 @@ class MailService {
     }
 
     async sendChangePassword(to, template) {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.SMPT_USER,
+                pass: process.env.SMPT_PASSWORD,
+            }
+        })
         const currPath = path.join(__dirname, '../mail-templates/')
-        this.transporter.use('compile', hbs({
+        transporter.use('compile', hbs({
             viewEngine: {
                 extname: '.handlebars',
                 layoutsDir: currPath,
@@ -49,7 +53,7 @@ class MailService {
             viewPath: currPath,
             extName: '.handlebars',
         }));
-        await this.transporter.sendMail({
+        await transporter.sendMail({
             from: process.env.SMPT_USER,
             to,
             subject: 'Chnage Password' + process.env.API_URL,
