@@ -15,13 +15,14 @@ class MailService {
     }
 
     async sendActivationMail(to, link ,template) {
+        const currPath = path.join(__dirname, '../mail-templates/')
         this.transporter.use('compile', hbs({
             viewEngine: {
                 extname: '.handlebars',
-                layoutsDir: 'mail-templates/',
+                layoutsDir: currPath,
                 defaultLayout: template,
             },
-            viewPath: 'mail-templates',
+            viewPath: currPath,
             extName: '.handlebars',
         }));
         await this.transporter.sendMail({
@@ -38,13 +39,14 @@ class MailService {
     }
 
     async sendChangePassword(to, template) {
+        const currPath = path.join(__dirname, '../mail-templates/')
         this.transporter.use('compile', hbs({
             viewEngine: {
                 extname: '.handlebars',
-                layoutsDir: 'mail-templates/',
+                layoutsDir: currPath,
                 defaultLayout: template,
             },
-            viewPath: 'mail-templates',
+            viewPath: currPath,
             extName: '.handlebars',
         }));
         await this.transporter.sendMail({
