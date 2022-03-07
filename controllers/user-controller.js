@@ -93,6 +93,16 @@ class UserController {
             next(e)
         }
     }
+
+    async resendActivation(req, res, next) {
+        try {
+            const { email } = req.body;
+            await userService.resendActivation(email)
+            return res.json({ resended: true})
+        } catch (e) {
+            next(e)
+        }
+    }
 };
 
 module.exports = new UserController;

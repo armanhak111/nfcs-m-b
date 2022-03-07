@@ -113,10 +113,14 @@ class UserService {
         }
     }
 
-
     async getAllUsers() {
         const users = await UserModel.find();
         return users;
+    }
+
+    async resendActivation(email) {
+        const user = await UserModel.findOne({ email });
+        await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${user.activationLink}`, MAIL_TEMPLATES.activation);
     }
 };
 
