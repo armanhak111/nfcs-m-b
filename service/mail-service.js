@@ -64,6 +64,39 @@ class MailService {
               }
         })
     }
+
+
+    
+    async resetPass(to, link, template) {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.SMPT_USER,
+                pass: process.env.SMPT_PASSWORD,
+            }
+        })
+        const currPath = path.join(__dirname, '../mail-templates/')
+        transporter.use('compile', hbs({
+            viewEngine: {
+                extname: '.handlebars',
+                layoutsDir: currPath,
+                defaultLayout: template,
+            },
+            viewPath: currPath,
+            extName: '.handlebars',
+        }));
+        await transporter.sendMail({
+            from: process.env.SMPT_USER,
+            to,
+            subject: 'Reset Password' + process.env.API_URL,
+            text: '',
+            template: template,
+            context: {                  
+                link,
+                name: 'Admin'
+              }
+        })
+    }
 };
 
 module.exports = new MailService();

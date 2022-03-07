@@ -103,6 +103,26 @@ class UserController {
             next(e)
         }
     }
+
+    async resetPassLink(req,res, next) {
+        try {
+            const { email } = req.body;
+            const linkSended = await userService.resetPassLink(email)
+            return res.json(linkSended)
+        } catch(e) {
+            next(e)
+        }
+    }
+
+    async resetpassword(req,res,next) {
+        try {
+            const { password, resetLink } = req.body;
+            const resetedPass =  await userService.resetpassword(password, resetLink)
+            return res.json(resetedPass)
+        }   catch(e){
+            next(e)
+        }
+    }
 };
 
 module.exports = new UserController;

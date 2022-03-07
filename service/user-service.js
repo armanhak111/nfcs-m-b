@@ -1,4 +1,5 @@
 const UserModel = require('../models/user-model');
+const ResetPasswordModel = require('../models/reset-password');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mailService = require('./mail-service');
@@ -121,6 +122,49 @@ class UserService {
     async resendActivation(email) {
         const user = await UserModel.findOne({ email });
         await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${user.activationLink}`, MAIL_TEMPLATES.activation);
+    }
+
+    async resetPassLink(email){
+         const resetLinkID = uuid.v4();
+         const findUserInResetCollection = await ResetPasswordModel.findOne({email})
+
+         if(findUserInResetCollection) {
+            await ResetPasswordModel.deleteOne({email});
+        }
+
+         await ResetPasswordModel.create({ email,resetLink:resetLinkID })
+         await mailService.resetPass(email, `${process.env.CLIENT_URL}/reset-password/${resetLinkID}`, MAIL_TEMPLATES.resetPassword);
+
+         return {
+            linkSended: true
+         }
+    }
+
+    async resetpassword(password, resetLink){
+        const currResetUser = await ResetPasswordModel.findOne({resetLink})
+
+        if(!currResetUser) {
+            throw ApiError.BadRequest('Password reset link is wrong')
+        }
+
+        const createdTime = new Date(currResetUser.createdAt).getTime();
+        const expirationTime =  6 * 60 * 60 * 1000;
+        const isExipired = new Date() - expirationTime;
+
+        if(createdTime < isExipired) {
+            throw ApiError.BadRequest('Your password reset link has been expired.')
+        }
+
+        const user = await UserModel.findOne({email: currResetUser.email});
+
+        user.password = await bcrypt.hash(password,3);
+        await user.save();
+        await ResetPasswordModel.deleteOne({resetLink});
+
+        return {
+            isPassReseted: true
+        }
+
     }
 };
 

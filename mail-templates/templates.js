@@ -1,6 +1,7 @@
 const MAIL_TEMPLATES = {
     activation : 'activation',
-    changePassword: 'changepassword'
+    changePassword: 'changepassword',
+    resetPassword: 'resetpass'
 };
 
 
