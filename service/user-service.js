@@ -114,9 +114,11 @@ class UserService {
         }
     }
 
-    async getAllUsers() {
-        const users = await UserModel.find();
-        return users;
+    async getCurrentUser(currUserId) {
+        const currentUser = await UserModel.findOne({id: currUserId});
+        const userDto = new UserDto(currentUser)
+
+        return userDto;
     }
 
     async resendActivation(email) {
