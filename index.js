@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: [process.env.CLIENT_URL, 'https://dev.nfcsportal.com']
+    origin: [process.env.CLIENT_URL, 'https://dev.nfcsportal.com', '*', 'http://localhost:3000']
 }));
 app.use('/api', router);
 app.use(errorMiddleware);
@@ -21,7 +21,7 @@ app.use(errorMiddleware);
 
 const start = async () => {
     try {
-        await mongoose.connect(process.env.DB_URL, {
+        await mongoose.connect('mongodb://localhost:27017/mainDB', {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
