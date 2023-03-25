@@ -41,13 +41,13 @@ class UserController {
         try {
             const activationLink = req.params.link;
             await userService.activate(activationLink)
-            return res.redirect(`${process.env.CLIENT_URL}/login`)
+            return res.redirect(`${process.env.CLIENT_URL}/sign-in`)
         } catch (e) {
             next(e)
         }
     }
 
-    async health(req,res){
+    async health(_req,res){
         const isHealth = {code: 200, status: 'healthy'}
         return res.json(isHealth)
     }
@@ -65,8 +65,28 @@ class UserController {
     async getUsers(req,res,next){
         try {
             const currUserId = req.params.id;
+            const users = await userService.getCurrentUser(currUserId)
+            return res.json(users)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getCurrentUser (req,res,next){
+        try {
+            const currUserId = req.params.id;
             console.log(currUserId,'apksoasasas')
             const users = await userService.getCurrentUser(currUserId)
+            return res.json(users)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async changeName (req,res,next){
+        try {
+            const {name} = req.body;
+            const users = await userService.changeName(name)
             return res.json(users)
         } catch (e) {
             next(e)

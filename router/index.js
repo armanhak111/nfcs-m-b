@@ -11,6 +11,7 @@ router.post('/registration',
 router.post('/login', userController.login);
 router.post('/logout', userController.logout);
 router.post('/changepassword', userController.changePassword)
+// router.get('/user',userController.getCurrentUser)
 
 router.get('/refresh', userController.refresh);
 
@@ -23,7 +24,10 @@ router.post('/resetpassword', userController.resetpassword)
 
 router.get('/health', userController.health);
 
-router.get('/user/:id', authMiddleware,  userController.getUsers);
+router.get('/user', authMiddleware,  userController.getUsers);
+
+router.put('/change/name', authMiddleware,  userController.changeName);
+
 
 
 
