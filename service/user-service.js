@@ -1,4 +1,6 @@
 const UserModel = require('../models/user-model');
+const AnalyticModel = require('../models/analytic-model');
+
 const ResetPasswordModel = require('../models/reset-password');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
@@ -18,7 +20,8 @@ class UserService {
         }
         const hashPassword = await bcrypt.hash(password,3)
         const activationLink = uuid.v4();
-        const user = await UserModel.create({email,password: hashPassword, activationLink, name: email.split('@')[0]})
+        const user = await UserModel.create({email,password: hashPassword, activationLink, name: email.split('@')[0], upt: 500})
+        await AnalyticModel.create({id: user._id, analytics: []})
         await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`, MAIL_TEMPLATES.activation);
 
         const userDto = new UserDto(user)
@@ -65,6 +68,7 @@ class UserService {
 
     async login(email,password) {
         const user = await UserModel.findOne({email});
+        console.log(user)
         if(!user){
             throw ApiError.BadRequest('Not found')
         }
