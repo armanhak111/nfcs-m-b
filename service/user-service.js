@@ -125,8 +125,8 @@ class UserService {
         return userDto;
     }
 
-    async changeName (name) {
-        const user = await UserModel.findOne()
+    async changeName (name, id) {
+        const user = await UserModel.findOne({_id:id})
 
         if(!user){
             throw ApiError.BadRequest('Incorrect URL')

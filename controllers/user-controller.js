@@ -85,8 +85,8 @@ class UserController {
 
     async changeName (req,res,next){
         try {
-            const {name} = req.body;
-            const users = await userService.changeName(name)
+            const {name, id} = req.body;
+            const users = await userService.changeName(name,id)
             return res.json(users)
         } catch (e) {
             next(e)
