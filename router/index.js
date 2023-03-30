@@ -40,7 +40,7 @@ router.post('/contact',
         additionalController.contact);
 
 router.post('/analytics/order', authMiddleware,  additionalController.order);
-router.get('/analytics', authMiddleware,  additionalController.getAnalytics);
+router.post('/analytics', authMiddleware,  additionalController.getAnalytics);
 router.delete('/analytics/delete', authMiddleware,  additionalController.deleteAnalytics);
 
 
