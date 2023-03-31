@@ -64,7 +64,8 @@ class UserController {
 
     async getUsers(req,res,next){
         try {
-            const currUserId = req.params.id;
+            const currUserId = req.query.id;
+            console.log(currUserId,'currUserIdcurrUserIdcurrUserId')
             const users = await userService.getCurrentUser(currUserId)
             return res.json(users)
         } catch (e) {
@@ -75,7 +76,6 @@ class UserController {
     async getCurrentUser (req,res,next){
         try {
             const currUserId = req.params.id;
-            console.log(currUserId,'apksoasasas')
             const users = await userService.getCurrentUser(currUserId)
             return res.json(users)
         } catch (e) {

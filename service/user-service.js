@@ -119,7 +119,7 @@ class UserService {
     }
 
     async getCurrentUser(currUserId) {
-        const currentUser = await UserModel.findOne({id: currUserId});
+        const currentUser = await UserModel.findOne({_id: currUserId});
         const userDto = new UserDto(currentUser)
 
         return userDto;
