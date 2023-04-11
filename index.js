@@ -11,7 +11,10 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: [process.env.CLIENT_URL, 'https://dev.nfcsportal.com', '*', 'http://localhost:3000', 'https://nfcs-f.onrender.com', 'https://www.nfcs.space', 'https://nfcs.space', 'nfcs.space']
+}));
 app.use('/api', router);
 app.use(errorMiddleware);
 
