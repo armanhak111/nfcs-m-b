@@ -48,7 +48,7 @@ class UserController {
     }
 
     async health(_req,res){
-        const isHealth = {code: 200, status: 'healthy'}
+        const isHealth = {code: 200, status: 'healthy', status: 'ARSHAK'}
         return res.json(isHealth)
     }
 
